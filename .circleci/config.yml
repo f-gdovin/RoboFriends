@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  build:
+    docker:
+    - image: circleci/node:10.13
+    steps:
+    - checkout
+    - run: echo "npm installing..."
+    - run: npm install
+    - run: CI=true npm run build
+  test:
+    docker:
+    - image: circleci/node:10.13
+    steps:
+    - checkout
+    - run: echo "tests running..."
+    - run: npm install
+    - run: npm test
+  lint:
+    docker:
+    - image: circleci/node:10.13
+    steps:
+    - checkout
+    - run: echo "linting running..."
+    - run: npm install
+    - run: npm test
+workflows:
+  version: 2
+  build_test_lint:
+    jobs:
+    - build
+    - lint
+    - test:
+        requires:
+          - lint
+
